@@ -10,10 +10,6 @@ import json
 from dotenv import load_dotenv
 load_dotenv()
 
-app = FastAPI()
-app.state.redis = redis.Redis(host="redis", port=6379, decode_responses=True)
-security = HTTPBasic()
-
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
 
@@ -21,6 +17,10 @@ DJANGO_API_URL = os.environ.get("DJANGO_API_URL")
 DJANGO_API_USER = os.environ.get("DJANGO_API_USER")
 DJANGO_API_PASSWORD = os.environ.get("DJANGO_API_PASSWORD")
 SYNC_KEY = os.environ.get("SYNC_KEY")
+
+app = FastAPI()
+app.state.redis = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+security = HTTPBasic()
 
 licnese_router = APIRouter()
 
@@ -64,7 +64,7 @@ async def fetch_all_admin_data():
 
 #Sync all licenses from admin panel to Redis
 async def sync_redis_data(body):
-    redis_client = redis.Redis(host="redis", port=6379, decode_responses=True)
+    redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
     await redis_client.flushdb()
 
@@ -164,7 +164,7 @@ async def get_redis_data(request: Request):
     if sync_key != SYNC_KEY:
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    redis_client = redis.Redis(host="redis", port=6379, decode_responses=True)
+    redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
     #Load Licenses
     licenses = []
