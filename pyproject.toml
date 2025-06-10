@@ -1,0 +1,15 @@
+[project]
+name = "license-validator"
+version = "0.1.0"
+description = "Shared licenses and parameters from Admin Panel to external APIs"
+authors = [{ name="Nikos" }]
+dependencies = [
+    "redis",
+    "httpx",
+    "python-dotenv",
+    "fastapi"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
